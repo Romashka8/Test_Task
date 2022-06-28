@@ -14,19 +14,18 @@
 	</ul>
 	<script>
 		var socket = new WebSocket("ws://localhost:8000/messages");
-		var count = 1;
 		socket.onmessage = function(event) {
+			var json = JSON.parse(event.data);
 			var arch = document.getElementById("arch");
 			var new_el = document.createElement("li");
-			var new_message = document.createTextNode(event.data);
+			var new_message = document.createTextNode(`${json.count} : ${json.content}`);
 			new_el.appendChild(new_message);
 			arch.appendChild(new_el);
 		};
 		function message(event) {
-			let data = { "number" : count, "content" : document.getElementById("text").value };
+			let data = { "content" : document.getElementById("text").value };
 			data = JSON.stringify(data);
 			socket.send(data);
-			count++;
 			document.getElementById("text").value = "";
 			event.preventDefault();
 		}
